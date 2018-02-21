@@ -1,0 +1,34 @@
+{
+  "name": "wool-model",
+  "version": "1.0.0",
+  "description": "common class model for wool project",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "tape test/**/*.spec.js |tap-summary --no-progress",
+    "autotest": "nodemon -e js,yml -x 'tape test/**/*.spec.js |tap-summary --no-progress'",
+    "autolinttest": "nodemon -e js,yml -x 'npm run lint && tape test/**/*.spec.js |tap-summary --no-progress'",
+    "coverage": "istanbul cover tape test/**/*.spec.js",
+    "lint": "eslint index.js lib/ test/",
+    "autolint": "nodemon -x eslint index.js lib/ test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicocube/wool-model.git"
+  },
+  "keywords": [
+    "model"
+  ],
+  "author": "Nicolas Lochet",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nicocube/wool-model/issues"
+  },
+  "homepage": "https://github.com/nicocube/wool-model#readme",
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "istanbul": "^0.4.5",
+    "tap-summary": "^3.0.1",
+    "tape": "^4.9.0"
+  }
+}
