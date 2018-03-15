@@ -54,6 +54,9 @@ class Event {
   static stringify(e) {
     return e.stringify()
   }
+  isSuccess() {
+    this.status === 'S'
+  }
   stringify() {
     return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16),'0',4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + this.message : '')
   }
