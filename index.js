@@ -55,7 +55,7 @@ class Event {
     return e.stringify()
   }
   isSuccess() {
-    this.status === 'S'
+    return this.status === 'S'
   }
   stringify() {
     return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16),'0',4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + this.message : '')
