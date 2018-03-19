@@ -37,7 +37,7 @@ test('check Event.parse', function(t) {
     new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S'))
 
   t.deepEqual(
-    Event.parse('I: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid statement'),
+    Event.parse('I: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement'),
     new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement'))
   t.end()
 })
@@ -53,8 +53,8 @@ test('check Event.stringify', function(t) {
     'S: 2017-02-10T12:43:41.247Z-00ff plip {"plip":{"plouf":"plaf"}}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', {test: 'this is a long text'}, 'S')),
-    'S: 2017-02-10T12:43:42.247Z-0100 XX {"test":"this is a long text"}')
+    Event.stringify(new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', {test: 'this is a long text\n+ multiline'}, 'S')),
+    'S: 2017-02-10T12:43:42.247Z-0100 XX {"test":"this is a long text\\n+ multiline"}')
 
   t.deepEqual(
     Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S')),
@@ -66,6 +66,6 @@ test('check Event.stringify', function(t) {
 
   t.deepEqual(
     Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement')),
-    'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid statement')
+    'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement')
   t.end()
 })
