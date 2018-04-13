@@ -39,6 +39,7 @@ test('check Event.parse', function(t) {
   t.deepEqual(
     Event.parse('I: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement'),
     new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement'))
+
   t.end()
 })
 

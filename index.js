@@ -46,7 +46,6 @@ class Event {
     if (! (typeof status === 'string')) throw new Error(status+' is not of type String.')
     if (status.length !== 1 || 'SIE'.indexOf(status) === -1) throw new Error(status+' is not "S", "I" or "E".')
     if (! (typeof message === 'undefined' || typeof message === 'string')) throw new Error(message+' is not of type String.')
-    if(typeof message === 'string') message = querystring.escape(message)
     Object.assign(this, {t, o, name, data, status, message})
   }
   static parse(s) {
@@ -61,7 +60,7 @@ class Event {
     return this.status === 'S'
   }
   stringify() {
-    return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16),'0',4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + this.message : '')
+    return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16),'0',4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + querystring.escape(this.message) : '')
   }
   toString() {
     return 'Event {'+ this.stringify() +'}'
