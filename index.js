@@ -15,10 +15,6 @@ class Command {
   constructor(t, o, name, param) {
     Object.assign(this, {t, o, name, param})
   }
-  toEvent(s, m) {
-    let {t, o, name, param} = this
-    return new Event(t, o, name, param, s, m)
-  }
 }
 
 function lpad(s, i, n) {
@@ -47,6 +43,18 @@ class Event {
     if (status.length !== 1 || 'SIE'.indexOf(status) === -1) throw new Error(status+' is not "S", "I" or "E".')
     if (! (typeof message === 'undefined' || typeof message === 'string')) throw new Error(message+' is not of type String.')
     Object.assign(this, {t, o, name, data, status, message})
+  }
+  static successFromCommand(cmd, param) {
+    let {t, o, name} = cmd
+    return new Event(t, o, name, param, 'S', undefined)
+  }
+  static invalidFromCommand(cmd, message) {
+    let {t, o, name, param} = cmd
+    return new Event(t, o, name, param, 'I', message)
+  }
+  static errorFromCommand(cmd, message) {
+    let {t, o, name, param} = cmd
+    return new Event(t, o, name, param, 'E', message)
   }
   static parse(s) {
     let e = rx.exec(s)

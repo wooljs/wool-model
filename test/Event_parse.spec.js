@@ -12,7 +12,7 @@
 'use strict'
 
 var test = require('tape')
-  , Event = require( __dirname + '/../index.js').Event
+  , { Event } = require( __dirname + '/../index.js')
 
 test('check Event.parse', function(t) {
 
@@ -40,6 +40,15 @@ test('check Event.parse', function(t) {
     Event.parse('I: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement'),
     new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement'))
 
+  t.throws(() => {
+    Event.parse('poop')
+  }, Error)
+
+  t.throws(() => {
+    Event.parse('X: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement')
+  }, Error)
+
+  t.plan(8)
   t.end()
 })
 
@@ -68,5 +77,7 @@ test('check Event.stringify', function(t) {
   t.deepEqual(
     Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement')),
     'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement')
+
+  t.plan(6)
   t.end()
 })
