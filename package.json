@@ -31,5 +31,6 @@
     "nyc": "^15.0.0",
     "tap-summary": "^4.0.0",
     "tape": "^4.13.2"
-  }
+  },
+  "dependencies": {}
 }
