@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicocube/wool-model.git"
+    "url": "git+https://github.com/wooljs/wool-model.git"
   },
   "keywords": [
     "model"
@@ -22,9 +22,9 @@
   "author": "Nicolas Lochet <nicolas.lochet@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/nicocube/wool-model/issues"
+    "url": "https://github.com/wooljs/wool-model/issues"
   },
-  "homepage": "https://github.com/nicocube/wool-model#readme",
+  "homepage": "https://github.com/wooljs/wool-model#readme",
   "devDependencies": {
     "eslint": "^7.15.0",
     "nodemon": "^2.0.6",
