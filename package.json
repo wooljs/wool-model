@@ -26,11 +26,10 @@
   },
   "homepage": "https://github.com/wooljs/wool-model#readme",
   "devDependencies": {
-    "eslint": "^7.15.0",
+    "eslint": "^8.7.0",
     "nodemon": "^2.0.6",
     "nyc": "^15.1.0",
-    "tape": "^5.0.1",
-    "tap-spec-emoji": "^6.1.2"
-  },
-  "dependencies": {}
+    "tap-spec-emoji": "^6.1.2",
+    "tape": "^5.0.1"
+  }
 }
