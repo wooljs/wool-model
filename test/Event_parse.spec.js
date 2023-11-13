@@ -17,6 +17,10 @@ var test = require('tape')
 test('check Event.parse', function(t) {
 
   t.deepEqual(
+    Event.parse('S: 2017-02-10T12:43:40.247Z-0000 foo {}'),
+    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'foo', {}, 'S'))
+
+  t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}'),
     new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S'))
 
@@ -48,7 +52,7 @@ test('check Event.parse', function(t) {
     Event.parse('X: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement')
   }, Error)
 
-  t.plan(8)
+  t.plan(9)
   t.end()
 })
 
