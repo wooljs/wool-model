@@ -49,10 +49,14 @@ test('check Event.parse', function(t) {
   }, Error)
 
   t.throws(() => {
+    Event.parse('S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop" : { }')
+  }, Error)
+
+  t.throws(() => {
     Event.parse('X: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement')
   }, Error)
 
-  t.plan(9)
+  t.plan(10)
   t.end()
 })
 
