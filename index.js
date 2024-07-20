@@ -9,16 +9,16 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-const querystring = require('querystring')
+import querystring from 'querystring'
 
-class Command {
-  constructor(t, o, name, param) {
+export class Command {
+  constructor (t, o, name, param) {
     Object.assign(this, { t, o, name, param })
   }
 }
 
-function lpad(s, i, n) {
-  var x = n - s.length
+function lpad (s, i, n) {
+  let x = n - s.length
   while (x > 0) {
     s = i + s
     x -= 1
@@ -26,15 +26,15 @@ function lpad(s, i, n) {
   return s
 }
 const rx = /^([SIE]): (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)-([0-9a-f]{4}) ([a-zA-Z0-9_:-]+) (\{.*\})(?: (.*))?$/
-  , _index_s = 1
-  , _index_t = 2
-  , _index_o = 3
-  , _index_n = 4
-  , _index_d = 5
-  , _index_m = 6
+const _indexS = 1
+const _indexT = 2
+const _indexO = 3
+const _indexN = 4
+const _indexD = 5
+const _indexM = 6
 
-class Event {
-  constructor(t, o, name, data, status, message) {
+export class Event {
+  constructor (t, o, name, data, status, message) {
     if (!(t instanceof Date)) throw new Error(t + ' is not of type Date.')
     if (!(typeof o === 'number')) throw new Error(o + ' is not of type Number.')
     if (!(typeof name === 'string')) throw new Error(name + ' is not of type String.')
@@ -44,45 +44,51 @@ class Event {
     if (!(typeof message === 'undefined' || typeof message === 'string')) throw new Error(message + ' is not of type String.')
     Object.assign(this, { t, o, name, data, status, message })
   }
-  static successFromCommand(cmd, param) {
+
+  static successFromCommand (cmd, param) {
     const { t, o, name } = cmd
     return new Event(t, o, name, param, 'S', undefined)
   }
-  static invalidFromCommand(cmd, message) {
+
+  static invalidFromCommand (cmd, message) {
     const { t, o, name, param } = cmd
     return new Event(t, o, name, param, 'I', message)
   }
-  static errorFromCommand(cmd, message) {
+
+  static errorFromCommand (cmd, message) {
     const { t, o, name, param } = cmd
     return new Event(t, o, name, param, 'E', message)
   }
-  static parse(s) {
+
+  static parse (s) {
     const e = rx.exec(s)
     if (e === null) throw new Error('Invalid format "' + s + '".')
     try {
-      return new Event(new Date(e[_index_t]), Number.parseInt(e[_index_o], 16), e[_index_n], JSON.parse(e[_index_d]), e[_index_s], e[_index_m] ? querystring.unescape(e[_index_m]) : undefined)
+      return new Event(new Date(e[_indexT]), Number.parseInt(e[_indexO], 16), e[_indexN], JSON.parse(e[_indexD]), e[_indexS], e[_indexM] ? querystring.unescape(e[_indexM]) : undefined)
     } catch (ex) {
       if (ex instanceof SyntaxError) {
         const r = /position (\d+)/.exec(ex.message)
         if (r !== null) {
-          ex.message += ': \n' + e[_index_d] + '\n' + '-'.repeat(r[1] - 1) + '^'
+          ex.message += ': \n' + e[_indexD] + '\n' + '-'.repeat(r[1] - 1) + '^'
         }
       }
       throw ex
     }
   }
-  static stringify(e) {
+
+  static stringify (e) {
     return e.stringify()
   }
-  isSuccess() {
+
+  isSuccess () {
     return this.status === 'S'
   }
-  stringify() {
+
+  stringify () {
     return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16), '0', 4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + querystring.escape(this.message) : '')
   }
-  toString() {
+
+  toString () {
     return 'Event {' + this.stringify() + '}'
   }
 }
-
-module.exports = { Command, Event }

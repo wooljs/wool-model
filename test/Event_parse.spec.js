@@ -9,40 +9,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-'use strict'
+import test from 'tape'
+import { Event } from '../index.js'
 
-var test = require('tape')
-  , { Event } = require( __dirname + '/../index.js')
-
-test('check Event.parse', function(t) {
-
+test('check Event.parse', (t) => {
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:40.247Z-0000 foo {}'),
     new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'foo', {}, 'S'))
 
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}'),
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S'))
+    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S'))
 
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:41.247Z-00ff plip {"plip":{"plouf":"plaf"}}'),
-    new Event(new Date('2017-02-10T12:43:41.247Z'), 255, 'plip', {'plip': {plouf: 'plaf'}}, 'S'))
+    new Event(new Date('2017-02-10T12:43:41.247Z'), 255, 'plip', { plip: { plouf: 'plaf' } }, 'S'))
 
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:42.247Z-0100 XX {"test":"this is a long text"}'),
-    new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', {test: 'this is a long text'}, 'S'))
+    new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', { test: 'this is a long text' }, 'S'))
 
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop": 42}'),
-    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S'))
+    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S'))
 
   t.deepEqual(
     Event.parse('S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop": 42}'),
-    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S'))
+    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S'))
 
   t.deepEqual(
     Event.parse('I: 2017-02-10T12:43:43.247Z-0000 foobar {"test": "muhahaha"} Invalid%20statement'),
-    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement'))
+    new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement'))
 
   t.throws(() => {
     Event.parse('poop')
@@ -60,30 +57,29 @@ test('check Event.parse', function(t) {
   t.end()
 })
 
-test('check Event.stringify', function(t) {
-
+test('check Event.stringify', (t) => {
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S')),
     'S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:41.247Z'), 255, 'plip', {'plip': {plouf: 'plaf'}}, 'S')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:41.247Z'), 255, 'plip', { plip: { plouf: 'plaf' } }, 'S')),
     'S: 2017-02-10T12:43:41.247Z-00ff plip {"plip":{"plouf":"plaf"}}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', {test: 'this is a long text\n+ multiline'}, 'S')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:42.247Z'), 256, 'XX', { test: 'this is a long text\n+ multiline' }, 'S')),
     'S: 2017-02-10T12:43:42.247Z-0100 XX {"test":"this is a long text\\n+ multiline"}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S')),
     'S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop":42}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {plop: 42}, 'S')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S')),
     'S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop":42}')
 
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement')),
+    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement')),
     'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement')
 
   t.plan(6)

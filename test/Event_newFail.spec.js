@@ -9,39 +9,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-'use strict'
+import test from 'tape'
+import { Event } from '../index.js'
 
-var test = require('tape')
-  , { Event } = require( __dirname + '/../index.js')
-
-test('check Event.new fail when expected', function(t) {
+test('check Event.new fail when expected', (t) => {
+  // avoid Standardjs expecting no side effects for new keyword
+  const check = (...p) => new Event(...p)
 
   t.throws(() => {
-    new Event()
+    check()
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'))
+    check(new Date('2017-02-10T12:43:40.247Z'))
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0)
+    check(new Date('2017-02-10T12:43:40.247Z'), 0)
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop')
+    check(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop')
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42})
+    check(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 })
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'X')
+    check(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'X')
   }, Error)
 
   t.throws(() => {
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S', null)
+    check(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S', null)
   }, Error)
 
   t.plan(7)

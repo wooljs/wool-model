@@ -9,30 +9,26 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-'use strict'
+import test from 'tape'
+import { Event } from '../index.js'
 
-var test = require('tape')
-  , { Event } = require( __dirname + '/../index.js')
+test('check Event.isSuccess()', (t) => {
+  t.ok(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S').isSuccess())
 
-test('check Event.isSuccess()', function(t) {
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement').isSuccess())
 
-  t.ok(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S').isSuccess())
-
-  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement').isSuccess())
-
-  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'E', 'Error statement').isSuccess())
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'E', 'Error statement').isSuccess())
 
   t.plan(3)
   t.end()
 })
 
-test('check Event.toString()', function(t) {
+test('check Event.toString()', (t) => {
+  t.deepEqual(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S').toString(), 'Event {S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}}')
 
-  t.deepEqual(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S').toString(), 'Event {S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}}')
+  t.deepEqual(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement').toString(), 'Event {I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement}')
 
-  t.deepEqual(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'I', 'Invalid statement').toString(), 'Event {I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement}')
-
-  t.deepEqual(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', {test: 'muhahaha'}, 'E', 'Error statement').toString(), 'Event {E: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Error%20statement}')
+  t.deepEqual(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'E', 'Error statement').toString(), 'Event {E: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Error%20statement}')
 
   t.plan(3)
   t.end()

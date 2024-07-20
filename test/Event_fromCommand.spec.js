@@ -9,31 +9,29 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-'use strict'
+import test from 'tape'
+import { Command, Event } from '../index.js'
 
-var test = require('tape')
-  , { Command, Event } = require( __dirname + '/../index.js')
-
-test('check Event.successFromCommand', function(t) {
+test('check Event.successFromCommand', (t) => {
   t.deepEqual(
-    Event.successFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42, suppr:'poo'}), {plop: 42}),
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42}, 'S'))
+    Event.successFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42, suppr: 'poo' }), { plop: 42 }),
+    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S'))
   t.plan(1)
   t.end()
 })
 
-test('check Event.invalidFromCommand', function(t) {
+test('check Event.invalidFromCommand', (t) => {
   t.deepEqual(
-    Event.invalidFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42, suppr:'poo'}), 'invalid stuff happened'),
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42, suppr:'poo'}, 'I', 'invalid stuff happened'))
+    Event.invalidFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42, suppr: 'poo' }), 'invalid stuff happened'),
+    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42, suppr: 'poo' }, 'I', 'invalid stuff happened'))
   t.plan(1)
   t.end()
 })
 
-test('check Event.errorFromCommand', function(t) {
+test('check Event.errorFromCommand', (t) => {
   t.deepEqual(
-    Event.errorFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42, suppr:'poo'}), 'some error happened'),
-    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', {plop: 42, suppr:'poo'}, 'E', 'some error happened'))
+    Event.errorFromCommand(new Command(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42, suppr: 'poo' }), 'some error happened'),
+    new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42, suppr: 'poo' }, 'E', 'some error happened'))
   t.plan(1)
   t.end()
 })
