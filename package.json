@@ -1,6 +1,6 @@
 {
   "name": "wool-model",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "common class model for wool project",
   "main": "index.js",
   "type": "module",
