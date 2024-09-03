@@ -41,7 +41,7 @@ export class Event {
     if (!(typeof data === 'object')) throw new Error(data + ' is not of type Object.')
     if (!(typeof status === 'string')) throw new Error(status + ' is not of type String.')
     if (status.length !== 1 || 'SIE'.indexOf(status) === -1) throw new Error(status + ' is not "S", "I" or "E".')
-    if (!(typeof message === 'undefined' || typeof message === 'string')) throw new Error(message + ' is not of type String.')
+    if (!(typeof message === 'undefined' || message instanceof Error || typeof message === 'string')) throw new Error(message + ' is not of type String or Error.')
     Object.assign(this, { t, o, name, data, status, message })
   }
 
@@ -84,8 +84,22 @@ export class Event {
     return this.status === 'S'
   }
 
+  isInvalid () {
+    return this.status === 'I'
+  }
+
+  isError () {
+    return this.status === 'E'
+  }
+
   stringify () {
-    return this.status + ': ' + this.t.toISOString() + '-' + lpad(this.o.toString(16), '0', 4) + ' ' + this.name + ' ' + JSON.stringify(this.data) + (this.message ? ' ' + querystring.escape(this.message) : '')
+    return `${this.status}: ${this.t.toISOString()}-${lpad(this.o.toString(16), '0', 4)} ${this.name} ${JSON.stringify(this.data)}${this.message
+      ? typeof this.message === 'string'
+        ? ' ' + querystring.escape(this.message)
+        : this.isError()
+          ? ' ' + querystring.escape(this.message.stack)
+          : ' ' + querystring.escape(this.message.message)
+      : ''}`
   }
 
   toString () {

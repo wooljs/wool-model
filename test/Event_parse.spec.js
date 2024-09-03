@@ -74,14 +74,28 @@ test('check Event.stringify', (t) => {
     Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S')),
     'S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop":42}')
 
+  const successEvent = new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S')
+  t.ok(successEvent.isSuccess())
   t.deepEqual(
-    Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { plop: 42 }, 'S')),
+    Event.stringify(successEvent),
     'S: 2017-02-10T12:43:43.247Z-0000 foobar {"plop":42}')
 
   t.deepEqual(
     Event.stringify(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement')),
     'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement')
 
-  t.plan(6)
+  const invalidEvent = new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', new Error('Invalid statement'))
+  t.ok(invalidEvent.isInvalid())
+  t.deepEqual(
+    Event.stringify(invalidEvent),
+    'I: 2017-02-10T12:43:43.247Z-0000 foobar {"test":"muhahaha"} Invalid%20statement')
+
+  const errorEvent = new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'E', new Error('Invalid statement'))
+  t.ok(errorEvent.isError())
+  t.ok(/E: 2017-02-10T12:43:43.247Z-0000 foobar \{"test":"muhahaha"\} Error%3A%20Invalid%20statement%0A%20%20%20%20at%20Test.%3Canonymous%3E%20\(.*?test%2FEvent_parse.spec.js%3A93%3A110\).*/.test(
+    Event.stringify(errorEvent)
+  ), 'Not Matching:' + Event.stringify(errorEvent))
+
+  t.plan(11)
   t.end()
 })

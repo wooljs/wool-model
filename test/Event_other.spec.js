@@ -22,6 +22,26 @@ test('check Event.isSuccess()', (t) => {
   t.plan(3)
   t.end()
 })
+test('check Event.isInvalid()', (t) => {
+  t.ok(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'I', 'Invalid statement').isInvalid())
+
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'S').isInvalid())
+
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'E', 'Error statement').isInvalid())
+
+  t.plan(3)
+  t.end()
+})
+test('check Event.isError()', (t) => {
+  t.ok(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'E', 'Error statement').isError())
+
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'I', 'Invalid statement').isError())
+
+  t.notOk(new Event(new Date('2017-02-10T12:43:43.247Z'), 0, 'foobar', { test: 'muhahaha' }, 'S').isError())
+
+  t.plan(3)
+  t.end()
+})
 
 test('check Event.toString()', (t) => {
   t.deepEqual(new Event(new Date('2017-02-10T12:43:40.247Z'), 0, 'plop', { plop: 42 }, 'S').toString(), 'Event {S: 2017-02-10T12:43:40.247Z-0000 plop {"plop":42}}')
