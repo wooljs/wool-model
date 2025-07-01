@@ -11,8 +11,25 @@
 
 import querystring from 'querystring'
 
+/**
+ * A class to model Command sent to Wool
+ *
+ * @class Command
+ *
+ * @param {Date} t a timestamp of the command emission
+ * @param {number} o an order number for command issued at the same time
+ * @param {string} name the name of the required command
+ * @param {object} param the parameters key-value
+ *
+ * @example
+ * const cmd = new Command(new Date(), 0, 'walk', {to: 'library', speed: 'normal'})
+ */
 export class Command {
   constructor (t, o, name, param) {
+    if (!(t instanceof Date)) throw new Error(t + ' is not of type Date.')
+    if (!(typeof o === 'number')) throw new Error(o + ' is not of type Number.')
+    if (!(typeof name === 'string')) throw new Error(name + ' is not of type String.')
+    if (!(typeof param === 'object')) throw new Error(param + ' is not of type Object.')
     Object.assign(this, { t, o, name, param })
   }
 }
@@ -33,6 +50,36 @@ const _indexN = 4
 const _indexD = 5
 const _indexM = 6
 
+/**
+ * An Enum of string, with following valid values :
+ *  - `S`: the event is a `success`
+ *  - `I`: the event is `invalid` (not validated by rule conditions)
+ *  - `E`: the event is an `error` (an unexpected error happened during event treatment)
+ * @enum {string}
+ *
+ * @example
+ * if (t === EventStatus.success) {
+ *   ...
+ * }
+ */
+export const EventStatus = {
+  success: 'S',
+  invalid: 'I',
+  error: 'E'
+}
+
+/**
+ * A class to model Event validated, executed and stored by Wool
+ *
+ * @class Event
+ *
+ * @param {Date} t a timestamp of the event storage
+ * @param {number} o an order number for events issued at the same time
+ * @param {string} name the name of the command that trigger the event
+ * @param {object} data the data of the event (derived from command parameters)
+ * @param {EventStatus} status the status of the event
+ * @param {string|Error} [message] for status `invalid` or `error` a message detailing the reason of being unsuccessful
+ */
 export class Event {
   constructor (t, o, name, data, status, message) {
     if (!(t instanceof Date)) throw new Error(t + ' is not of type Date.')
@@ -45,21 +92,48 @@ export class Event {
     Object.assign(this, { t, o, name, data, status, message })
   }
 
-  static successFromCommand (cmd, param) {
+  /**
+   * A static method to create {@link EventStatus.succes} {@link Event}
+   *
+   * @param {Command} cmd the original command
+   * @param {object} data the actual data after command execution
+   * @returns {Event} an event derivative from given {@link Command}
+   */
+  static successFromCommand (cmd, data) {
     const { t, o, name } = cmd
-    return new Event(t, o, name, param, 'S', undefined)
+    return new Event(t, o, name, data, EventStatus.success, undefined)
   }
 
+  /**
+   * A static method to create {@link EventStatus.invalid} {@link Event}
+   *
+   * @param {Command} cmd the original command
+   * @param {string} message the explanation message for invalidity of the command
+   * @returns {Event} an event derivative from given {@link Command}
+   */
   static invalidFromCommand (cmd, message) {
     const { t, o, name, param } = cmd
-    return new Event(t, o, name, param, 'I', message)
+    return new Event(t, o, name, param, EventStatus.invalid, message)
   }
 
+  /**
+   * A static method to create {@link EventStatus.error} {@link Event}
+   *
+   * @param {Command} cmd the original command
+   * @param {string} message the explanation message for error during the command execution
+   * @returns {Event} an event derivative from given {@link Command}
+   */
   static errorFromCommand (cmd, message) {
     const { t, o, name, param } = cmd
-    return new Event(t, o, name, param, 'E', message)
+    return new Event(t, o, name, param, EventStatus.error, message)
   }
 
+  /**
+   * A static method to create {@link Event} from stringified Event
+   *
+   * @param {string} s a stringified Event
+   * @returns {Event} the event
+   */
   static parse (s) {
     const e = rx.exec(s)
     if (e === null) throw new Error('Invalid format "' + s + '".')
@@ -76,22 +150,48 @@ export class Event {
     }
   }
 
+  /**
+   * A static method to stringify {@link Event}
+   *
+   * @param {Event} e a genuine event
+   * @returns {string} a stringified Event
+   */
   static stringify (e) {
     return e.stringify()
   }
 
+  /**
+   * Check if event is a {@link EventStatus.succes}
+   *
+   * @returns {boolean}
+   */
   isSuccess () {
-    return this.status === 'S'
+    return this.status === EventStatus.success
   }
 
+  /**
+   * Check if event is {@link EventStatus.invalid}
+   *
+   * @returns {boolean}
+   */
   isInvalid () {
-    return this.status === 'I'
+    return this.status === EventStatus.invalid
   }
 
+  /**
+   * Check if event is an {@link EventStatus.error}
+   *
+   * @returns {boolean}
+   */
   isError () {
-    return this.status === 'E'
+    return this.status === EventStatus.error
   }
 
+  /**
+   * A method to make and {@link Event} stringify itself
+   *
+   * @returns {string} a stringified Event
+   */
   stringify () {
     return `${this.status}: ${this.t.toISOString()}-${lpad(this.o.toString(16), '0', 4)} ${this.name} ${JSON.stringify(this.data)}${this.message
       ? typeof this.message === 'string'
@@ -102,6 +202,11 @@ export class Event {
       : ''}`
   }
 
+  /**
+   * A string representation of an {@link Event}
+   *
+   * @returns {string} a string representation of an Event
+   */
   toString () {
     return 'Event {' + this.stringify() + '}'
   }
